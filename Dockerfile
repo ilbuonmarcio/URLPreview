@@ -7,6 +7,7 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckod
     tar -xvzf geckodriver-v0.36.0-linux64.tar.gz && rm geckodriver-v0.36.0-linux64.tar.gz && ls -lah
 
 RUN mkdir /app
+RUN mkdir /app/tmp
 RUN cp geckodriver /app/geckodriver
 WORKDIR /app
 
