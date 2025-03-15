@@ -1,6 +1,7 @@
 from loguru import logger
 from flask import Flask
-from flask import Response
+from flask import Response, jsonify
+from flask_cors import CORS
 import base64
 from io import BytesIO
 from PIL import Image
@@ -15,6 +16,7 @@ options.add_argument('--headless')
 service = Service(executable_path="/app/geckodriver")
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/url-preview/<b64url>")
@@ -28,6 +30,8 @@ def hello_world(b64url):
         driver.maximize_window()
         driver.implicitly_wait(10)
         driver.get(url)
+        
+        page_title = driver.title
         
         # Getting the actual screenshot
         screenshot = driver.get_screenshot_as_png()
@@ -48,8 +52,14 @@ def hello_world(b64url):
         # Quitting the driver
         driver.quit()
         
-        return f'<img src="data:image/png;base64,{base64_string}"/>'
+        response = {
+            "b64buffer": base64_string,
+            "page_title": page_title
+        }
+        
+        return jsonify(response)
     except Exception as e:
+        # raise e
         return Response(
             "Error during URL request",
             status=500
