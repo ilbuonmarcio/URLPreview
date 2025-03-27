@@ -4,5 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:42069:42069"
+      - "42069:42069"
     restart: unless-stopped
+    networks:
+      - reverse-proxy
+
+networks:
+  reverse-proxy:
+    external: true
